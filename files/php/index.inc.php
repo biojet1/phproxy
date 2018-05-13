@@ -3,11 +3,11 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF']))
 {
     exit(0);
 }
-?><?xml version="1.0" encoding="utf-8"?>
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 	<head>
-		<title><?php echo $GLOBALS['_config']['site_name'];?></title>
+		<title><?php echo htmlspecialchars($GLOBALS['_config']['site_name']);?></title>
 <style>
 		* {
 			padding: 0;
@@ -211,7 +211,7 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF']))
 		}
 		#proxopttogl {
 			position: absolute;
-			width: 0;
+			left: -12em;
 		}
 
 		#proxopttogl ~ #proxoptmenu {
@@ -221,33 +221,27 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF']))
 		#proxopttogl:checked ~ #proxoptmenu {
 			display : block;
 		}
-	</style>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	</head>
 	<body>
-
-    <?php if($data['category'] != 'auth'): ?>
-			<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+	<?php if($data['category'] != 'auth'): ?>
+		<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
 		<div class="main">
 			<div class="form-title-row">
-				<h1><?php echo $GLOBALS['_config']['site_name'];?></h1>
+				<h1><?php echo htmlspecialchars($GLOBALS['_config']['site_name']);?></h1>
 			</div>
-
-
-				<div class="form-row">
-					<label>
-						<span>Enter full URL:</span>
-						<input type="text" name="<?php echo $GLOBALS['_config']['url_var_name'] ?>" value="<?php echo isset($GLOBALS['_url']) ? htmlspecialchars($GLOBALS['_url']) : !empty($_GET['__iv']) ? htmlspecialchars($_GET['__iv']) : (isset($GLOBALS['_url']) ? htmlspecialchars($GLOBALS['_url']) : ''); ?>" placeholder="https://www.phoenixpeca.xyz/" required>
-					</label>
-				</div>
-
-				<div class="form-row">
-					<button class="button-submit" type="submit">Proxify</button>
-					<label class="button-cancel" for="proxopttogl">Options</label>
-				</div>
-
+			<div class="form-row">
+				<label>
+					<span>Enter full URL:</span>
+					<input type="text" name="<?php echo htmlspecialchars($GLOBALS['_config']['url_var_name']) ?>" value="<?php echo isset($GLOBALS['_url']) ? htmlspecialchars($GLOBALS['_url']) : (isset($_GET['__iv']) ? htmlspecialchars($_GET['__iv']) : ''); ?>" placeholder="https://www.phoenixpeca.xyz/" required="required"/>
+				</label>
+			</div>
+			<div class="form-row">
+				<button class="button-submit" type="submit">Proxify</button>
+				<label class="button-cancel" for="proxopttogl">Options</label>
+			</div>
 <?php
-
 switch ($data['category'])
 {
     case 'error':
@@ -256,7 +250,7 @@ switch ($data['category'])
         switch ($data['group'])
         {
             case 'url':
-                echo '<b>URL Error (' . $data['error'] . ')</b>: ';
+                echo '<b>URL Error (' . htmlspecialchars($data['error']) . ')</b>: ';
                 switch ($data['type'])
                 {
                     case 'internal':
@@ -298,7 +292,6 @@ switch ($data['category'])
         break;
 }
 ?>
-
 		</div>
 				<?php if(in_array(0, $GLOBALS['_frozen_flags'])): ?>
 				<input type="checkbox" id="proxopttogl"/>
@@ -313,24 +306,23 @@ foreach ($GLOBALS['_flags'] as $flag_name => $flag_value)
 {
 	if (!$GLOBALS['_frozen_flags'][$flag_name])
 	{
-		echo '<li class="option"><label><input type="checkbox" name="' . $GLOBALS['_config']['flags_var_name'] . '[' . $flag_name . ']"' . ($flag_value ? ' checked="checked"' : '') . ' />' . $GLOBALS['_labels'][$flag_name][1] . '</label></li>' . "\n";
+		echo '<li class="option"><label><input type="checkbox" name="' . $GLOBALS['_config']['flags_var_name'] . '[' . $flag_name . ']"' . ($flag_value ? ' checked="checked"' : '') . ' />' . htmlspecialchars($GLOBALS['_labels'][$flag_name][1]) . '</label></li>' . "\n";
 	}
 }
 ?>
 				</div>
-
-				</div>
+			</div>
 				<?php endif; ?>
 		</form>
 
 		<?php elseif($data['category'] == 'auth'): ?>
 
-			<form class="auth" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+			<form class="auth" method="post" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
 		<div class="main main-auth-box">
 			<div class="form-title-row">
 				<h1 class="auth-header">Authentication Required</h1>
 			</div>
-				<input type="hidden" name="<?php echo $GLOBALS['_config']['basic_auth_var_name'] ?>" value="<?php echo base64_encode($data['realm']) ?>" />
+				<input type="hidden" name="<?php echo htmlspecialchars($GLOBALS['_config']['basic_auth_var_name']) ?>" value="<?php echo base64_encode($data['realm']) ?>" />
 				<div class="form-row">
 					<label>
 						<span>Enter username:</span>
@@ -349,12 +341,10 @@ foreach ($GLOBALS['_flags'] as $flag_name => $flag_value)
 			<?php if(!empty($_POST['username']) || !empty($_POST['password'])): ?>
 				<p class="error"><b>Authentication Required: </b>The supplied credentials were unauthorized to access the specified content.</p>
 			<?php else: ?>
-				<p class="info"><b>Authentication Required: </b>Enter your username and password for "<?php echo htmlspecialchars($data['realm']); ?>" on <?php echo $GLOBALS['_url_parts']['host']; ?></p>
+				<p class="info"><b>Authentication Required: </b>Enter your username and password for "<?php echo htmlspecialchars($data['realm']); ?>" on <?php echo htmlspecialchars($GLOBALS['_url_parts']['host']); ?></p>
 			<?php endif; ?>
 		</div>
-			</form>
-    <?php endif; ?>
-
-
+		</form>
+	<?php endif; ?>
 	</body>
 </html>
